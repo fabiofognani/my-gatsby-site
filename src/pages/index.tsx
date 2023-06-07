@@ -9,7 +9,7 @@ const IndexPage: React.FC<PageProps<Queries.HomePageQueryQuery>> = ({ data }) =>
       <h1 className="font-bold text-xl">
         {site?.siteMetadata?.title}
       </h1>
-      <h2 className="text-lg">42</h2>
+      <h2 className="text-lg text-red-500">42</h2>
     </main>
   )
 }
