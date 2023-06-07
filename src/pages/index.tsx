@@ -12,7 +12,7 @@ const IndexPage: React.FC<PageProps<Queries.HomePageQueryQuery>> = ({ data }) =>
       <h2 className="text-lg">42</h2>
     </main>
   )
-}
+} 
 
 export default IndexPage
 
@@ -28,5 +28,5 @@ export const query = graphql`
 
 export const Head: HeadFC<Queries.HomePageQueryQuery> = ({ data }) => {
   const { site } = data;
-  return <title>Home Page | {site?.siteMetadata?.title}</title>
+  return <title>Home | {site?.siteMetadata?.title}</title>
 }
