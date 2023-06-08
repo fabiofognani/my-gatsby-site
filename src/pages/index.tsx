@@ -1,15 +1,21 @@
 import * as React from "react"
-import { HeadFC, PageProps, graphql } from "gatsby"
+import { HeadFC, Link, PageProps, graphql } from "gatsby"
 
 const IndexPage: React.FC<PageProps<Queries.HomePageQueryQuery>> = ({ data }) => {
-  const { site } = data;
+  const { site, allContentfulPageBlogPost } = data;
 
   return (
     <main className="p-4">
       <h1 className="font-bold text-xl">
         {site?.siteMetadata?.title}
       </h1>
-      <h2 className="text-lg text-purple-500">42</h2>
+      <ul>
+        {allContentfulPageBlogPost?.nodes.map(node => (<li>
+          <Link to={`/blog/${node.id}`}>
+            {node.title}
+          </Link>
+        </li>))}
+      </ul>
     </main>
   )
 }
@@ -20,6 +26,12 @@ export const query = graphql`
   query HomePageQuery {
     site {
       siteMetadata {
+        title
+      }
+    }
+    allContentfulPageBlogPost {
+      nodes {
+        id
         title
       }
     }
