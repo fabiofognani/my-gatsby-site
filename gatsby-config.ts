@@ -14,6 +14,7 @@ const config: GatsbyConfig = {
   // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
   plugins: [
+    "gatsby-plugin-webpack-bundle-analyser-v2",
     "gatsby-plugin-postcss",
     `gatsby-plugin-gatsby-cloud`,
     "gatsby-plugin-image",
