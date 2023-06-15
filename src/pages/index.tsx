@@ -39,6 +39,18 @@ export const query = graphql`
         title
       }
     }
+    allContentfulFakePost {
+      nodes {
+        id
+        title
+        relatedThings {
+          name
+        }
+        relatedThing {
+          name
+        }
+      }
+    }
   }
 `
 
