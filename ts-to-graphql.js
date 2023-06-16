@@ -35,15 +35,18 @@ function getGraphqlLines(typeName) {
 
     const isArray = /\[\]/g.test(line); // TODO is Array<...> a possible case?
 
-    const graphqlType = graphqlTypesMap[type] ?? type;
+    let graphqlType = graphqlTypesMap[type] ?? type;
+
+    const otherFieldsType = names.find(name => {
+      return new RegExp(`I${name}`).test(graphqlType);
+    })
+    if (otherFieldsType) {
+      graphqlType = `Contentful${otherFieldsType}`;
+    }
 
     const finalType = isArray ? `[${graphqlType.replace('[]', '')}]` : graphqlType;
 
-    const needsRevision = !graphqlTypesMap[type];
-
     return `\n\t${
-      needsRevision ? '# ' : ''
-    }${
       fieldName
     }: ${
       finalType
@@ -52,15 +55,13 @@ function getGraphqlLines(typeName) {
     }${
       type === 'number' 
         ? '\t\t# check Float or Int'
-        : needsRevision
-          ? '\t\t# needs human revision'
-          : ''
+        : ''
     }`;
   }).filter(Boolean).join('');
 
   return `type Contentful${typeName} implements Node {${lines}\n}`;
 }
 
-const graphql = names.map(getGraphqlLines).join('\n');
+const graphql = names.map(getGraphqlLines).join('\n\n');
 
 fs.writeFileSync('./src/graphql-schema.gql', graphql);

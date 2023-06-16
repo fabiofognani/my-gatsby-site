@@ -1,0 +1,115 @@
+type RichText {
+  nodeType: String
+}
+
+type Location {
+  lat: Float!
+  lon: Float!
+}
+
+type Object {
+  fakeFieldForCustomSchemaDefinition: Boolean
+}
+
+type Asset {
+  title: String
+}
+
+# Fake Post
+type ContentfulFakePost implements Node {
+	# Title
+	title: String
+	# Description
+	description: String
+	# Related Things
+	relatedThings: [ContentfulAnotherTestContent]
+	# Related Thing
+	relatedThing: ContentfulAnotherTestContent
+}
+
+# Another Test Content
+type ContentfulAnotherTestContent implements Node {
+	# Name
+	name: String
+	# Image
+	image: Asset
+}
+
+# page Blog post
+# To create individual blog posts
+type ContentfulPageBlogPost implements Node {
+	# Internal name
+	internalName: String!
+	# SEO fields
+	seoFields: ContentfulComponentSeo
+	# Slug
+	slug: String!
+	# Author
+	author: ContentfulComponentAuthor
+	# Published date
+	publishedDate: String!
+	# Title
+	title: String!
+	# Subtitle
+	shortDescription: String
+	# Featured image
+	featuredImage: Asset!
+	# Content
+	content: RichText!
+	# Related blog posts
+	relatedBlogPosts: [ContentfulPageBlogPost]
+}
+
+# page Landing
+# To have an entry point for the app (e.g. Homepage)
+type ContentfulPageLanding implements Node {
+	# Internal name
+	internalName: String!
+	# SEO fields
+	seoFields: ContentfulComponentSeo
+	# Featured blog post
+	featuredBlogPost: ContentfulPageBlogPost
+}
+
+# component SEO
+# To have SEO-related properties to the pages we render
+type ContentfulComponentSeo implements Node {
+	# Internal name
+	internalName: String!
+	# Page title
+	pageTitle: String!
+	# Page description
+	pageDescription: String
+	# Canonical URL
+	canonicalUrl: String
+	# nofollow
+	nofollow: Boolean!
+	# noindex
+	noindex: Boolean!
+	# Share images
+	shareImages: [Asset]
+}
+
+# component Rich image
+# To describe an image used in rich text fields
+type ContentfulComponentRichImage implements Node {
+	# Internal name
+	internalName: String!
+	# Image
+	image: Asset!
+	# Caption
+	caption: String
+	# Full width
+	fullWidth: Boolean
+}
+
+# component Author
+# To have author-related properties
+type ContentfulComponentAuthor implements Node {
+	# Internal name
+	internalName: String!
+	# Name
+	name: String!
+	# Avatar
+	avatar: Asset
+}

@@ -1,18 +1,21 @@
 type ContentfulAnotherTestContent implements Node {
 	name: String
-	# image: Asset		# needs human revision
+	image: Asset
 }
+
 type ContentfulComponentAuthor implements Node {
 	internalName: String!
 	name: String!
-	# avatar: Asset		# needs human revision
+	avatar: Asset
 }
+
 type ContentfulComponentRichImage implements Node {
 	internalName: String!
-	# image: Asset!		# needs human revision
+	image: Asset!
 	caption: String
 	fullWidth: Boolean
 }
+
 type ContentfulComponentSeo implements Node {
 	internalName: String!
 	pageTitle: String!
@@ -20,28 +23,31 @@ type ContentfulComponentSeo implements Node {
 	canonicalUrl: String
 	nofollow: Boolean!
 	noindex: Boolean!
-	# shareImages: [Asset]		# needs human revision
+	shareImages: [Asset]
 }
+
 type ContentfulFakePost implements Node {
 	title: String
 	description: String
 	relatedThings: [ContentfulAnotherTestContent]
 	relatedThing: ContentfulAnotherTestContent
 }
+
 type ContentfulPageBlogPost implements Node {
 	internalName: String!
-	# seoFields: IComponentSeo		# needs human revision
+	seoFields: ContentfulComponentSeo
 	slug: String!
-	# author: IComponentAuthor		# needs human revision
+	author: ContentfulComponentAuthor
 	publishedDate: String!
 	title: String!
 	shortDescription: String
-	# featuredImage: Asset!		# needs human revision
-	# content: Document!		# needs human revision
-	# relatedBlogPosts: [IPageBlogPost]		# needs human revision
+	featuredImage: Asset!
+	content: Document!
+	relatedBlogPosts: [ContentfulPageBlogPost]
 }
+
 type ContentfulPageLanding implements Node {
 	internalName: String!
-	# seoFields: IComponentSeo		# needs human revision
-	# featuredBlogPost: IPageBlogPost		# needs human revision
+	seoFields: ContentfulComponentSeo
+	featuredBlogPost: ContentfulPageBlogPost
 }

@@ -141,10 +141,10 @@ export interface IFakePostFields {
   description?: string | undefined;
 
   /** Related Things */
-  relatedThings?: Entry<{ [fieldId: string]: unknown }>[] | undefined;
+  relatedThings?: IAnotherTestContent[] | undefined;
 
   /** Related Thing */
-  relatedThing?: Entry<{ [fieldId: string]: unknown }> | undefined;
+  relatedThing?: IAnotherTestContent | undefined;
 }
 
 export interface IFakePost extends Entry<IFakePostFields> {

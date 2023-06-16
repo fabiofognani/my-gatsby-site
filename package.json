@@ -14,6 +14,7 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "typecheck": "tsc --noEmit",
+    "schema": "node generate-schema.js",
     "codegen": "contentful-typescript-codegen --output src/gatsby-interfaces.d.ts && node ts-to-graphql.js"
   },
   "dependencies": {
