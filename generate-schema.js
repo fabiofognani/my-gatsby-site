@@ -12,7 +12,11 @@ const environmentId = process.env.CONTENTFUL_ENVIRONMENT_ID;
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
 
 const baseUrl = process.env.CONTENTFUL_HOST ?? 'https://cdn.contentful.com';
-const url = `${baseUrl}/spaces/${spaceId}/environments/${environmentId}/content_types?access_token=${accessToken}&limit=1000`;
+const queryParams = new URLSearchParams({
+  access_token: accessToken,
+  limit: 1000,
+});
+const url = `${baseUrl}/spaces/${spaceId}/environments/${environmentId}/content_types?${queryParams}`;
 
 /**
  * This will hold the union types that cannot be defined inline
@@ -82,8 +86,7 @@ function getGQLFieldType(fieldConfig, contentTypeConfig) {
 }
 
 function getArrayFieldType(fieldConfig, contentTypeConfig) {
-  const type = getGQLFieldType(fieldConfig.items, contentTypeConfig);
-  return `[${type}]`
+  return `[${getGQLFieldType(fieldConfig.items, contentTypeConfig)}]`
 }
 
 /**
@@ -109,9 +112,7 @@ function getGQLFieldBasicType(fieldConfig, contentTypeConfig) {
 function getFieldLinkType(fieldConfig, contentTypeConfig) {
   if (fieldConfig.validations) {
     // TODO check multiple items with linkContentType (will it happen?)
-    const linkContentTypeItem = fieldConfig.validations.find(validation => {
-      return validation.linkContentType;
-    });
+    const linkContentTypeItem = fieldConfig.validations.find(({ linkContentType }) => linkContentType);
     // TODO check other cases (will it happen?)
     if (linkContentTypeItem && linkContentTypeItem.linkContentType) {
       if (linkContentTypeItem.linkContentType.length === 1) {
