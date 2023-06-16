@@ -4,6 +4,8 @@ require("dotenv").config({
   path: `.env.${process.env.NODE_ENV ?? 'development'}`,
 });
 
+const isVerbose = process.argv.includes('--verbose')
+
 const spaceId = process.env.CONTENTFUL_SPACE_ID;
 const environmentId = process.env.CONTENTFUL_ENVIRONMENT_ID;
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
@@ -25,11 +27,11 @@ function transformContentTypesToGQL(schema) {
 function transformContentTypeToGQL(contentTypeConfig) {
   const gqlContentTypeName = toGQLContentTypeName(contentTypeConfig.sys.id);
   return [
-    toGQLContentTypeHeader(contentTypeConfig),
+    isVerbose && toGQLContentTypeHeader(contentTypeConfig),
     `type ${gqlContentTypeName} implements Node {${
       transformContentTypeFieldsToGQL(contentTypeConfig)
     }\n}`,
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 }
 
 function toGQLContentTypeHeader(contentTypeConfig) {
@@ -54,9 +56,9 @@ function transformContentTypeFieldsToGQL(contentTypeConfig) {
 
 function transformFieldConfigToGQL(fieldConfig) {
   return [
-    `\n\t# ${fieldConfig.name}`,
+    isVerbose && `\n\t# ${fieldConfig.name}`,
     `\n\t${fieldConfig.id}: ${getGQLFieldType(fieldConfig)}`,
-  ].join('');
+  ].filter(Boolean).join('');
 }
 
 /**

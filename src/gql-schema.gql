@@ -15,101 +15,536 @@ type Asset {
   title: String
 }
 
-# Fake Post
-type ContentfulFakePost implements Node {
-	# Title
-	title: String
-	# Description
-	description: String
+# FakeContent
+# Oh this is really really fake
+type ContentfulFakeContent implements Node {
 	# Related Things
-	relatedThings: [ContentfulAnotherTestContent]
+	relatedThings: [ContentfulAccessory | ContentfulApplication | ContentfulCompanyHistory]!
+	# Other Related Things
+	otherRelatedThings: [ContentfulEvent | ContentfulEventLocation]
 	# Related Thing
-	relatedThing: ContentfulAnotherTestContent
+	relatedThing: ContentfulCompanyHistory | ContentfulEventLocation
+	# Other Related Thing
+	otherRelatedThing: (ContentfulCompanyHistory | ContentfulCompanyHistoryItem)!
 }
 
-# Another Test Content
-type ContentfulAnotherTestContent implements Node {
+# Line
+# Product line
+type ContentfulLine implements Node {
+	# Line Name
+	lineName: String!
+	# Slug
+	slug: String!
+	# Technology
+	technology: ContentfulTechnology!
+	# Abstract
+	abstract: RichText
+	# Banner Image
+	bannerImage: Asset!
+	# Card Image
+	cardImage: Asset!
+	# Catalog
+	catalog: Asset
+}
+
+# Technology
+# Product technology (family)
+type ContentfulTechnology implements Node {
+	# Technology name
+	technologyName: String!
+	# Slug
+	slug: String!
+	# Description
+	description: RichText
+	# Banner Image
+	bannerImage: Asset
+	# Catalog
+	catalog: Asset
+	# Card Image
+	cardImage: Asset!
+	# Related accessories
+	relatedAccessories: [ContentfulAccessory]
+}
+
+# Hero Carousel Slide
+# A slide of the hero carousel, with image, title and description
+type ContentfulHeroCarouselSlide implements Node {
+	# Name
+	name: String!
+	# Image
+	image: Asset!
+	# Title
+	title: String!
+	# Description
+	description: RichText
+}
+
+# Product Carousel
+# A carousel of products
+type ContentfulProductCarousel implements Node {
+	# Name
+	name: String!
+	# Title
+	title: String!
+	# Handler
+	handler: String!
+	# Products
+	products: [ContentfulProduct]!
+}
+
+# Material
+# Product or project material, containing also the relative detail page data
+type ContentfulMaterial implements Node {
+	# Material Name
+	materialName: String!
+	# Slug
+	slug: String!
+	# Page Title
+	pageTitle: String!
+	# Abstract
+	abstract: RichText
+	# Banner Image
+	bannerImage: Asset
+	# Catalog
+	catalog: Asset
+}
+
+# Presentation Item
+# A presentation item card with icon, title and description
+type ContentfulPresentationItem implements Node {
+	# Name
+	name: String!
+	# Icon
+	icon: Asset!
+	# Title
+	title: String!
+	# Description
+	description: RichText
+}
+
+# Presentation Strip
+# A page strip showing up to 2 presentation cards
+type ContentfulPresentationStrip implements Node {
+	# Name
+	name: String!
+	# Handler
+	handler: String
+	# Title
+	title: String!
+	# Subtitle
+	subtitle: String
+	# Description
+	description: RichText
+	# Items
+	items: [ContentfulPresentationItem]
+}
+
+# Event Strip
+# A page strip showing up to 5 event cards
+type ContentfulEventStrip implements Node {
+	# Name
+	name: String!
+	# Handler
+	handler: String!
+	# Title
+	title: String!
+	# Events
+	events: [ContentfulEvent]!
+}
+
+# News Strip
+# A page strip showing up to 3 news cards
+type ContentfulNewsStrip implements Node {
+	# Name
+	name: String!
+	# Handler
+	handler: String!
+	# Title
+	title: String!
+	# News
+	news: [ContentfulNews]!
+}
+
+# Project Strip
+# A page strip showing up to 3 project (case history) cards
+type ContentfulProjectStrip implements Node {
+	# Name
+	name: String!
+	# Handler
+	handler: String!
+	# Title
+	title: String!
+	# Projects
+	projects: [ContentfulProject]!
+}
+
+# Service Strip
+# A page strip showing up to 3 service cards
+type ContentfulServiceStrip implements Node {
+	# Name
+	name: String!
+	# Handler
+	handler: String!
+	# Title
+	title: String!
+	# Services
+	services: [ContentfulService]!
+}
+
+# Event
+# A company event or exhibition
+type ContentfulEvent implements Node {
+	# Event Name
+	eventName: String!
+	# Slug
+	slug: String!
+	# Image
+	image: Asset
+	# Placeholder Event
+	placeholderEvent: Boolean
+	# Abstract
+	abstract: RichText
+	# Start Date
+	startDate: String!
+	# End Date
+	endDate: String
+	# Location
+	location: ContentfulEventLocation
+	# Hall
+	hall: String
+	# Pavilion
+	pavilion: String
+	# CTA Label
+	ctaLabel: String
+	# Article
+	article: RichText
+	# Image Gallery
+	imageGallery: [Asset]
+	# Related articles
+	relatedArticles: [ContentfulNews]
+}
+
+# Product
+# Product family categorized by materials, technologies and applications, with all information, related products and accessories
+type ContentfulProduct implements Node {
+	# Product code
+	productCode: String!
+	# Slug
+	slug: String!
+	# Description
+	description: RichText
+	# Image
+	image: Asset!
+	# Materials
+	materials: [ContentfulMaterial]
+	# Lines
+	lines: [ContentfulLine]!
+	# Applications
+	applications: [ContentfulApplication]
+	# Video Pill
+	videoPill: Asset
+	# Catalog
+	catalog: Asset
+	# Technical Sheets
+	technicalSheets: Object!
+	# Related accessories
+	relatedAccessories: [ContentfulAccessory]
+	# Related products
+	relatedProducts: [ContentfulProduct]
+	# Case History
+	caseHistory: ContentfulProject
+}
+
+# Video Banner
+# Banner with title, subtitle, description and video
+type ContentfulVideoBanner implements Node {
+	# Name
+	name: String!
+	# Handler
+	handler: String!
+	# Title
+	title: String!
+	# Subtitle
+	subtitle: String!
+	# Description
+	description: RichText
+	# Video
+	video: Asset!
+}
+
+# Project
+# A notable case history project
+type ContentfulProject implements Node {
+	# Project Name
+	projectName: String!
+	# Slug
+	slug: String!
+	# Image
+	image: Asset!
+	# Video
+	video: Asset!
+	# Secondary Images
+	secondaryImages: [Asset]
+	# Materials
+	materials: [ContentfulMaterial]
+	# Abstract
+	abstract: RichText
+	# Quote
+	quote: ContentfulQuote
+	# Linked Products
+	linkedProducts: [ContentfulProduct]
+	# Linked Partners
+	linkedPartners: [ContentfulPartner]
+}
+
+# Hero Banner
+# A banner placed on top of the page
+type ContentfulHeroBanner implements Node {
+	# Name
+	name: String!
+	# Handler
+	handler: String!
+	# Title
+	title: String!
+	# Description
+	description: RichText
+	# Image
+	image: Asset!
+}
+
+# Hero Carousel
+# Carousel of elements composed by image, title and description
+type ContentfulHeroCarousel implements Node {
 	# Name
 	name: String
+	# Handler
+	handler: String!
+	# Slides
+	slides: [ContentfulHeroCarouselSlide]!
+	# Auto Slide
+	autoSlide: Int
+	# Highlight Event
+	highlightEvent: ContentfulEvent
+}
+
+# Accessory
+# Accessory related to products or technologies
+type ContentfulAccessory implements Node {
+	# Accessory Name
+	accessoryName: String!
 	# Image
 	image: Asset
 }
 
-# page Blog post
-# To create individual blog posts
-type ContentfulPageBlogPost implements Node {
-	# Internal name
-	internalName: String!
-	# SEO fields
-	seoFields: ContentfulComponentSeo
+# News
+# News article
+type ContentfulNews implements Node {
+	# Title
+	title: String!
 	# Slug
 	slug: String!
-	# Author
-	author: ContentfulComponentAuthor
-	# Published date
-	publishedDate: String!
+	# Image
+	image: Asset
+	# Tag
+	tag: String!
+	# Date
+	date: String!
+	# Location
+	location: String
+	# Abstract
+	abstract: RichText
+	# Article
+	article: RichText!
+	# Image Gallery
+	imageGallery: [Asset]
+	# Related Articles
+	relatedArticles: [ContentfulNews]
+}
+
+# Footer
+# Represents the footer of the page
+type ContentfulFooter implements Node {
+	# Name
+	name: String!
+	# Company name
+	companyName: String
+	# Company site
+	companySite: RichText!
+	# Company contacts
+	companyContacts: RichText!
+	# Project list title
+	projectListTitle: String!
+	# Projects
+	projects: [ContentfulProject]!
+	# Service list title
+	serviceListTitle: String!
+	# Services
+	services: [ContentfulService]!
+	# Social Icon
+	socialIcon: Asset!
+	# Social Label
+	socialLabel: String!
+	# Social Link
+	socialLink: String
+	# Phone Assistance Title
+	phoneAssistanceTitle: String!
+	# Phone Assistance Lines
+	phoneAssistanceLines: [String]!
+	# Service Assistance Title
+	serviceAssistanceTitle: String!
+	# Service Assistance Lines
+	serviceAssistanceLines: [String]!
+}
+
+# Image Gallery
+type ContentfulImageGallery implements Node {
+	# Name
+	name: String!
+	# Title
+	title: String
+	# Subtitle
+	subtitle: String
+	# Images
+	images: [Asset]
+}
+
+# Partner Carousel
+# Carousel of company partners' logo
+type ContentfulPartnerCarousel implements Node {
+	# Name
+	name: String!
+	# Title
+	title: String!
+	# Handler
+	handler: String!
+	# Partners List
+	partnersList: [ContentfulPartner]!
+}
+
+# Page Header
+# The top part of a page with some info like title, subtitle, description and up to 2 images
+type ContentfulPageHeader implements Node {
+	# Name
+	name: String!
+	# Handler
+	handler: String!
 	# Title
 	title: String!
 	# Subtitle
-	shortDescription: String
-	# Featured image
-	featuredImage: Asset!
-	# Content
-	content: RichText!
-	# Related blog posts
-	relatedBlogPosts: [ContentfulPageBlogPost]
+	subtitle: String
+	# Description
+	description: RichText
+	# Images
+	images: [Asset]!
 }
 
-# page Landing
-# To have an entry point for the app (e.g. Homepage)
-type ContentfulPageLanding implements Node {
-	# Internal name
-	internalName: String!
-	# SEO fields
-	seoFields: ContentfulComponentSeo
-	# Featured blog post
-	featuredBlogPost: ContentfulPageBlogPost
-}
-
-# component SEO
-# To have SEO-related properties to the pages we render
-type ContentfulComponentSeo implements Node {
-	# Internal name
-	internalName: String!
-	# Page title
-	pageTitle: String!
-	# Page description
-	pageDescription: String
-	# Canonical URL
-	canonicalUrl: String
-	# nofollow
-	nofollow: Boolean!
-	# noindex
-	noindex: Boolean!
-	# Share images
-	shareImages: [Asset]
-}
-
-# component Rich image
-# To describe an image used in rich text fields
-type ContentfulComponentRichImage implements Node {
-	# Internal name
-	internalName: String!
-	# Image
-	image: Asset!
-	# Caption
-	caption: String
-	# Full width
-	fullWidth: Boolean
-}
-
-# component Author
-# To have author-related properties
-type ContentfulComponentAuthor implements Node {
-	# Internal name
-	internalName: String!
+# Company History Item
+# Company history year description with image and title
+type ContentfulCompanyHistoryItem implements Node {
 	# Name
 	name: String!
-	# Avatar
-	avatar: Asset
+	# Title
+	title: String!
+	# Year
+	year: String!
+	# Icon
+	icon: Asset
+	# Description
+	description: String!
+}
+
+# Company History
+# Company history timeline with ordered items
+type ContentfulCompanyHistory implements Node {
+	# Name
+	name: String
+	# Handler
+	handler: String!
+	# Title
+	title: String!
+	# History Items
+	historyItems: [ContentfulCompanyHistoryItem]!
+}
+
+# Service
+# A company offered service
+type ContentfulService implements Node {
+	# Service Name
+	serviceName: String!
+	# Icon
+	icon: Asset!
+	# Abstract
+	abstract: RichText
+	# Image
+	image: Asset
+}
+
+# Partner
+# A company partner
+type ContentfulPartner implements Node {
+	# Name
+	name: String!
+	# Logo
+	logo: Asset!
+	# External URL
+	externalUrl: String
+	# Abstract
+	abstract: RichText!
+}
+
+# Label Rich Text
+# A piece of translated and formatted text
+type ContentfulLabelRichText implements Node {
+	# ID
+	id: String
+	# Value
+	value: RichText!
+}
+
+# Label
+# A piece of translated text
+type ContentfulLabel implements Node {
+	# ID
+	id: String!
+	# Value
+	value: String!
+}
+
+# Quote
+# Someone said something about the company or a project
+type ContentfulQuote implements Node {
+	# Name
+	name: String
+	# Quote
+	quote: String!
+	# Author
+	author: String!
+	# Author role
+	authorRole: String
+}
+
+# Application
+# Product application in a machine
+type ContentfulApplication implements Node {
+	# Application name
+	applicationName: String
+	# Slug
+	slug: String!
+	# Description
+	description: RichText
+	# Image
+	image: Asset
+	# Catalog
+	catalog: Asset
+}
+
+# Event Location
+# An event or exhibition location
+type ContentfulEventLocation implements Node {
+	# Name
+	name: String!
+	# Location title
+	locationTitle: String
+	# Address
+	address: String
 }
