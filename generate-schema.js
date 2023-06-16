@@ -5,21 +5,29 @@ require("dotenv").config({
 });
 
 const isVerbose = process.argv.includes('--verbose')
+const isDebug = process.argv.includes('--debug')
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID;
 const environmentId = process.env.CONTENTFUL_ENVIRONMENT_ID;
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
 
-const baseUrl = 'https://cdn.contentful.com';
-const url = `${baseUrl}/spaces/${spaceId}/environments/${environmentId}/content_types?access_token=${accessToken}`;
+const baseUrl = process.env.CONTENTFUL_HOST ?? 'https://cdn.contentful.com';
+const url = `${baseUrl}/spaces/${spaceId}/environments/${environmentId}/content_types?access_token=${accessToken}&limit=1000`;
+
+/**
+ * This will hold the union types that cannot be defined inline
+ */
+const collectedUnions = [];
 
 async function getSchema() { 
   const response = await fetch(url);
   const data = await response.json();
+  if (isDebug) fs.writeFileSync('./src/contentful-schema.json', JSON.stringify(data, null, 2));
   return data;
 }
 
 function transformContentTypesToGQL(schema) {
+  if (!schema.items) throw new Error(schema.message || 'Unknown error')
   return schema.items.map(transformContentTypeToGQL)
     .join('\n\n');
 }
@@ -50,37 +58,38 @@ function capitalized(string) {
 }
 
 function transformContentTypeFieldsToGQL(contentTypeConfig) {
-  return contentTypeConfig.fields.map(transformFieldConfigToGQL)
-    .join('');
+  return contentTypeConfig.fields.map(fieldConfig => (
+    transformFieldConfigToGQL(fieldConfig, contentTypeConfig)
+  )).join('');
 }
 
-function transformFieldConfigToGQL(fieldConfig) {
+function transformFieldConfigToGQL(fieldConfig, contentTypeConfig) {
   return [
     isVerbose && `\n\t# ${fieldConfig.name}`,
-    `\n\t${fieldConfig.id}: ${getGQLFieldType(fieldConfig)}`,
+    `\n\t${fieldConfig.id}: ${getGQLFieldType(fieldConfig, contentTypeConfig)}`,
   ].filter(Boolean).join('');
 }
 
 /**
  * Returns full type definition for a field, including required (!) and array ([...]) modifiers 
  */
-function getGQLFieldType(fieldConfig) {
-  let type = getGQLFieldBasicType(fieldConfig);
+function getGQLFieldType(fieldConfig, contentTypeConfig) {
+  let type = getGQLFieldBasicType(fieldConfig, contentTypeConfig);
   if (fieldConfig.required) {
-    const isUnionType = / \| /g.test(type);
-    const isArrayType = /^\[(.*)\]$/.test(type);
-    if (isUnionType && !isArrayType) {
-      type = `(${type})`;
-    }
     type = `${type}!`;
   }
   return type;
 }
 
+function getArrayFieldType(fieldConfig, contentTypeConfig) {
+  const type = getGQLFieldType(fieldConfig.items, contentTypeConfig);
+  return `[${type}]`
+}
+
 /**
  * See https://www.contentful.com/developers/docs/concepts/data-model/
  */
-function getGQLFieldBasicType(fieldConfig) {
+function getGQLFieldBasicType(fieldConfig, contentTypeConfig) {
   const fieldType = fieldConfig.type;
   switch (fieldType) {
     case 'Text':
@@ -91,13 +100,13 @@ function getGQLFieldBasicType(fieldConfig) {
       return 'Int';
     case 'Number':
       return 'Float';
-    case 'Link': return getFieldLinkType(fieldConfig);
-    case 'Array': return `[${getGQLFieldType(fieldConfig.items)}]`;
+    case 'Link': return getFieldLinkType(fieldConfig, contentTypeConfig);
+    case 'Array': return getArrayFieldType(fieldConfig, contentTypeConfig);
     default: return fieldType;
   }
 }
 
-function getFieldLinkType(fieldConfig) {
+function getFieldLinkType(fieldConfig, contentTypeConfig) {
   if (fieldConfig.validations) {
     // TODO check multiple items with linkContentType (will it happen?)
     const linkContentTypeItem = fieldConfig.validations.find(validation => {
@@ -105,7 +114,14 @@ function getFieldLinkType(fieldConfig) {
     });
     // TODO check other cases (will it happen?)
     if (linkContentTypeItem && linkContentTypeItem.linkContentType) {
-      return linkContentTypeItem.linkContentType.map(toGQLContentTypeName).join(' | ');
+      if (linkContentTypeItem.linkContentType.length === 1) {
+        return toGQLContentTypeName(linkContentTypeItem.linkContentType[0]);
+      } else {
+        const unionTypes = linkContentTypeItem.linkContentType.map(toGQLContentTypeName);
+        const unionName =  `Union__${unionTypes.join('__')}`
+        collectedUnions.push(`union ${unionName} = ${unionTypes.join(' | ')}`);
+        return unionName;
+      }
     }
   }
   return fieldConfig.linkType;
@@ -125,12 +141,12 @@ type Location {
   lon: Float!
 }
 
-type Object {
-  fakeFieldForCustomSchemaDefinition: Boolean
-}
-
 type Asset {
   title: String
+}
+
+type Object {
+  fakeFieldForSchemaDefinition: Boolean
 }
 `
 
@@ -139,6 +155,8 @@ getSchema()
   .then(customContentTypes => {
     const finalSchema = [
       builtInTypes,
+      collectedUnions.join('\n\n'),
+      '',
       customContentTypes,
       '', // empty line
     ].join('\n');
