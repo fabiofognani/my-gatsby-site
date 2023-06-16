@@ -19,16 +19,16 @@ const url = `${baseUrl}/spaces/${spaceId}/environments/${environmentId}/content_
  */
 const collectedUnions = [];
 
+/**
+ * Fetches content model from Contentful and returns it as JSON
+ */
 async function getSchema() { 
   const response = await fetch(url);
   const data = await response.json();
   if (isDebug) fs.writeFileSync('./src/contentful-schema.json', JSON.stringify(data, null, 2));
-  return data;
-}
-
-function transformContentTypesToGQL(schema) {
-  if (!schema.items) throw new Error(schema.message || 'Unknown error')
-  return schema.items.map(transformContentTypeToGQL)
+  
+  if (!data.items) throw new Error(data.message || 'Unknown error')
+  return data.items.map(transformContentTypeToGQL)
     .join('\n\n');
 }
 
@@ -115,8 +115,10 @@ function getFieldLinkType(fieldConfig, contentTypeConfig) {
     // TODO check other cases (will it happen?)
     if (linkContentTypeItem && linkContentTypeItem.linkContentType) {
       if (linkContentTypeItem.linkContentType.length === 1) {
+        // Only 1 possibility: no need for a dedicated union type
         return toGQLContentTypeName(linkContentTypeItem.linkContentType[0]);
       } else {
+        // Create a new union type
         const unionTypes = linkContentTypeItem.linkContentType.map(toGQLContentTypeName);
         const unionName =  `Union__${unionTypes.join('__')}`
         collectedUnions.push(`union ${unionName} = ${unionTypes.join(' | ')}`);
@@ -151,12 +153,11 @@ type Object {
 `
 
 getSchema()
-  .then(transformContentTypesToGQL)
   .then(customContentTypes => {
     const finalSchema = [
       builtInTypes,
       collectedUnions.join('\n\n'),
-      '',
+      '', // empty line
       customContentTypes,
       '', // empty line
     ].join('\n');
