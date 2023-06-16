@@ -1,8 +1,5 @@
 const fs = require('fs');
 
-// const spaceId = 's1k6joqqd35h';
-// const environmentId = 'schema-test';
-// const accessToken = '-YmByLDqi_R_fd6NuN8k34QZigeJlI0i-702pnnuIio';
 require("dotenv").config({
   path: `.env.${process.env.NODE_ENV ?? 'development'}`,
 });
@@ -62,6 +59,9 @@ function transformFieldConfigToGQL(fieldConfig) {
   ].join('');
 }
 
+/**
+ * Returns full type definition for a field, including required (!) and array ([...]) modifiers 
+ */
 function getGQLFieldType(fieldConfig) {
   let type = getGQLFieldBasicType(fieldConfig);
   if (fieldConfig.required) {
@@ -75,6 +75,9 @@ function getGQLFieldType(fieldConfig) {
   return type;
 }
 
+/**
+ * See https://www.contentful.com/developers/docs/concepts/data-model/
+ */
 function getGQLFieldBasicType(fieldConfig) {
   const fieldType = fieldConfig.type;
   switch (fieldType) {
@@ -106,6 +109,10 @@ function getFieldLinkType(fieldConfig) {
   return fieldConfig.linkType;
 }
 
+/**
+ * Contentful types that must be added to the schema definitions,
+ * otherwise createTypes will throw an error.
+ */
 const builtInTypes = 
 `type RichText {
   nodeType: String
