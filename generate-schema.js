@@ -7,6 +7,10 @@ require("dotenv").config({
 const isVerbose = process.argv.includes('--verbose')
 const isDebug = process.argv.includes('--debug')
 
+const outputFile = process.argv.includes('--output')
+  ? process.argv[process.argv.indexOf('--output') + 1]
+  : './src/gql-schema.gql'
+
 const spaceId = process.env.CONTENTFUL_SPACE_ID;
 const environmentId = process.env.CONTENTFUL_ENVIRONMENT_ID;
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
@@ -163,5 +167,5 @@ getSchema()
       '', // empty line
     ].join('\n');
 
-    fs.writeFileSync('./src/gql-schema.gql', finalSchema);
+    fs.writeFileSync(outputFile, finalSchema);
   });
