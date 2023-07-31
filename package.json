@@ -15,7 +15,8 @@
     "clean": "gatsby clean",
     "typecheck": "tsc --noEmit",
     "schema": "node generate-schema.js",
-    "migrate": "node migrations/run.js",
+    "migration:run": "node migrations/run.js",
+    "migration:update": "node migrations/run.js -f ./migrations/repeatable",
     "generate": "plop --plopfile plop/plopfile.js",
     "codegen": "contentful-typescript-codegen --output src/gatsby-interfaces.d.ts && node ts-to-graphql.js"
   },
@@ -53,6 +54,8 @@
     "install": "^0.13.0",
     "npm": "^9.7.1",
     "plop": "^3.1.2",
+    "select-prompt": "^0.3.2",
+    "shelljs": "^0.8.5",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.3"
   }
