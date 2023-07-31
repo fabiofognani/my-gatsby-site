@@ -7,6 +7,6 @@ module.exports = function (plop) {
       d.getDate(),
       d.getHours(),
       d.getMinutes(),
-    ].join('');
+    ].map(digit => String(digit).padStart(2, '0')).join('');
   });
 };
