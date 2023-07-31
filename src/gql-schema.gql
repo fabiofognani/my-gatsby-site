@@ -15,294 +15,58 @@ type Object {
   fakeFieldForSchemaDefinition: Boolean
 }
 
-union Union__ContentfulAccessory__ContentfulApplication__ContentfulCompanyHistory = ContentfulAccessory | ContentfulApplication | ContentfulCompanyHistory
 
-union Union__ContentfulEvent__ContentfulEventLocation = ContentfulEvent | ContentfulEventLocation
 
-union Union__ContentfulCompanyHistory__ContentfulEventLocation = ContentfulCompanyHistory | ContentfulEventLocation
-
-union Union__ContentfulCompanyHistory__ContentfulCompanyHistoryItem = ContentfulCompanyHistory | ContentfulCompanyHistoryItem
-
-type ContentfulFakeContent implements Node {
-	relatedThings: [Union__ContentfulAccessory__ContentfulApplication__ContentfulCompanyHistory]!
-	otherRelatedThings: [Union__ContentfulEvent__ContentfulEventLocation]
-	relatedThing: Union__ContentfulCompanyHistory__ContentfulEventLocation
-	otherRelatedThing: Union__ContentfulCompanyHistory__ContentfulCompanyHistoryItem!
-}
-
-type ContentfulLine implements Node {
-	lineName: String!
-	slug: String!
-	technology: ContentfulTechnology!
-	abstract: RichText
-	bannerImage: Asset!
-	cardImage: Asset!
-	catalog: Asset
-}
-
-type ContentfulTechnology implements Node {
-	technologyName: String!
-	slug: String!
-	description: RichText
-	bannerImage: Asset
-	catalog: Asset
-	cardImage: Asset!
-	relatedAccessories: [ContentfulAccessory]
-}
-
-type ContentfulHeroCarouselSlide implements Node {
-	name: String!
-	image: Asset!
-	title: String!
-	description: RichText
-}
-
-type ContentfulProductCarousel implements Node {
-	name: String!
-	title: String!
-	handler: String!
-	products: [ContentfulProduct]!
-}
-
-type ContentfulMaterial implements Node {
-	materialName: String!
-	slug: String!
-	pageTitle: String!
-	abstract: RichText
-	bannerImage: Asset
-	catalog: Asset
-}
-
-type ContentfulPresentationItem implements Node {
-	name: String!
-	icon: Asset!
-	title: String!
-	description: RichText
-}
-
-type ContentfulPresentationStrip implements Node {
-	name: String!
-	handler: String
-	title: String!
-	subtitle: String
-	description: RichText
-	items: [ContentfulPresentationItem]
-}
-
-type ContentfulEventStrip implements Node {
-	name: String!
-	handler: String!
-	title: String!
-	events: [ContentfulEvent]!
-}
-
-type ContentfulNewsStrip implements Node {
-	name: String!
-	handler: String!
-	title: String!
-	news: [ContentfulNews]!
-}
-
-type ContentfulProjectStrip implements Node {
-	name: String!
-	handler: String!
-	title: String!
-	projects: [ContentfulProject]!
-}
-
-type ContentfulServiceStrip implements Node {
-	name: String!
-	handler: String!
-	title: String!
-	services: [ContentfulService]!
-}
-
-type ContentfulEvent implements Node {
-	eventName: String!
-	slug: String!
-	image: Asset
-	placeholderEvent: Boolean
-	abstract: RichText
-	startDate: String!
-	endDate: String
-	location: ContentfulEventLocation
-	hall: String
-	pavilion: String
-	ctaLabel: String
-	article: RichText
-	imageGallery: [Asset]
-	relatedArticles: [ContentfulNews]
-}
-
-type ContentfulProduct implements Node {
-	productCode: String!
-	slug: String!
-	description: RichText
-	image: Asset!
-	materials: [ContentfulMaterial]
-	lines: [ContentfulLine]!
-	applications: [ContentfulApplication]
-	videoPill: Asset
-	catalog: Asset
-	technicalSheets: Object!
-	relatedAccessories: [ContentfulAccessory]
-	relatedProducts: [ContentfulProduct]
-	caseHistory: ContentfulProject
-}
-
-type ContentfulVideoBanner implements Node {
-	name: String!
-	handler: String!
-	title: String!
-	subtitle: String!
-	description: RichText
-	video: Asset!
-}
-
-type ContentfulProject implements Node {
-	projectName: String!
-	slug: String!
-	image: Asset!
-	video: Asset!
-	secondaryImages: [Asset]
-	materials: [ContentfulMaterial]
-	abstract: RichText
-	quote: ContentfulQuote
-	linkedProducts: [ContentfulProduct]
-	linkedPartners: [ContentfulPartner]
-}
-
-type ContentfulHeroBanner implements Node {
-	name: String!
-	handler: String!
-	title: String!
-	description: RichText
-	image: Asset!
-}
-
-type ContentfulHeroCarousel implements Node {
-	name: String
-	handler: String!
-	slides: [ContentfulHeroCarouselSlide]!
-	autoSlide: Int
-	highlightEvent: ContentfulEvent
-}
-
-type ContentfulAccessory implements Node {
-	accessoryName: String!
-	image: Asset
-}
-
-type ContentfulNews implements Node {
-	title: String!
-	slug: String!
-	image: Asset
-	tag: String!
-	date: String!
-	location: String
-	abstract: RichText
-	article: RichText!
-	imageGallery: [Asset]
-	relatedArticles: [ContentfulNews]
-}
-
-type ContentfulFooter implements Node {
-	name: String!
-	companyName: String
-	companySite: RichText!
-	companyContacts: RichText!
-	projectListTitle: String!
-	projects: [ContentfulProject]!
-	serviceListTitle: String!
-	services: [ContentfulService]!
-	socialIcon: Asset!
-	socialLabel: String!
-	socialLink: String
-	phoneAssistanceTitle: String!
-	phoneAssistanceLines: [String]!
-	serviceAssistanceTitle: String!
-	serviceAssistanceLines: [String]!
-}
-
-type ContentfulImageGallery implements Node {
-	name: String!
+type ContentfulFakePost implements Node {
 	title: String
-	subtitle: String
-	images: [Asset]
+	description: String
+	relatedThings: [ContentfulAnotherTestContent]
+	relatedThing: ContentfulAnotherTestContent
 }
 
-type ContentfulPartnerCarousel implements Node {
-	name: String!
-	title: String!
-	handler: String!
-	partnersList: [ContentfulPartner]!
-}
-
-type ContentfulPageHeader implements Node {
-	name: String!
-	handler: String!
-	title: String!
-	subtitle: String
-	description: RichText
-	images: [Asset]!
-}
-
-type ContentfulCompanyHistoryItem implements Node {
-	name: String!
-	title: String!
-	year: String!
-	icon: Asset
-	description: String!
-}
-
-type ContentfulCompanyHistory implements Node {
+type ContentfulAnotherTestContent implements Node {
 	name: String
-	handler: String!
-	title: String!
-	historyItems: [ContentfulCompanyHistoryItem]!
-}
-
-type ContentfulService implements Node {
-	serviceName: String!
-	icon: Asset!
-	abstract: RichText
 	image: Asset
 }
 
-type ContentfulPartner implements Node {
-	name: String!
-	logo: Asset!
-	externalUrl: String
-	abstract: RichText!
-}
-
-type ContentfulLabelRichText implements Node {
-	id: String
-	value: RichText!
-}
-
-type ContentfulLabel implements Node {
-	id: String!
-	value: String!
-}
-
-type ContentfulQuote implements Node {
-	name: String
-	quote: String!
-	author: String!
-	authorRole: String
-}
-
-type ContentfulApplication implements Node {
-	applicationName: String
+type ContentfulPageBlogPost implements Node {
+	internalName: String!
+	seoFields: ContentfulComponentSeo
 	slug: String!
-	description: RichText
-	image: Asset
-	catalog: Asset
+	author: ContentfulComponentAuthor
+	publishedDate: String!
+	title: String!
+	shortDescription: String
+	featuredImage: Asset!
+	content: RichText!
+	relatedBlogPosts: [ContentfulPageBlogPost]
 }
 
-type ContentfulEventLocation implements Node {
+type ContentfulPageLanding implements Node {
+	internalName: String!
+	seoFields: ContentfulComponentSeo
+	featuredBlogPost: ContentfulPageBlogPost
+}
+
+type ContentfulComponentSeo implements Node {
+	internalName: String!
+	pageTitle: String!
+	pageDescription: String
+	canonicalUrl: String
+	nofollow: Boolean!
+	noindex: Boolean!
+	shareImages: [Asset]
+}
+
+type ContentfulComponentRichImage implements Node {
+	internalName: String!
+	image: Asset!
+	caption: String
+	fullWidth: Boolean
+}
+
+type ContentfulComponentAuthor implements Node {
+	internalName: String!
 	name: String!
-	locationTitle: String
-	address: String
+	avatar: Asset
 }

@@ -1,0 +1,22 @@
+module.exports = function(migration, context) {
+  const ctype = migration.createContentType('{{kebabCase name}}')
+  ctype
+    .name('{{titleCase name}}')
+    .description('{{sentenceCase name}}')
+
+  // ctype
+  //   .createField('validatedField')
+  //   .name('Validated Field')
+  //   .type('Symbol')
+  //   .validations([
+  //     { "unique": true },
+  //     { "regexp": 
+  //       { "pattern": "^\\w[\\w.-]*@([\\w-]+\\.)+[\\w-]+$" }
+  //     }
+  //   ])
+
+  // ctype.createField('referenceField')
+  //   .name('Reference Field')
+  //   .type('Link')
+  //   .linkType('Entry')
+};

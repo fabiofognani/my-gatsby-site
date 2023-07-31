@@ -1,6 +1,7 @@
-const fs = require('fs');
+import fs from 'fs';
+import { GatsbyNode } from 'gatsby';
 
-exports.createSchemaCustomization = ({ actions }: any) => {
+export const createSchemaCustomization: GatsbyNode["createPages"] = ({ actions }) => {
   const { createTypes } = actions
 
   const schema = fs.readFileSync('src/gql-schema.gql').toString();
